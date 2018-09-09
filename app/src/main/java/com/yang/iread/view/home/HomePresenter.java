@@ -8,7 +8,7 @@ import com.yang.iread.base.BasePresenter;
  *
  * @author: yang
  */
-public class HomePresenter extends BasePresenter<HomeContract.View> implements HomeContract.Presenter<HomeContract.View>  {
+public class HomePresenter extends BasePresenter<HomeContract.View> implements HomeContract.Presenter<HomeContract.View> {
     @Override
     public void getHomaData() {
         mView.handleHomeData("Hello");

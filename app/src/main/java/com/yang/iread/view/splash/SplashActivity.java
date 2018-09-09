@@ -2,10 +2,10 @@ package com.yang.iread.view.splash;
 
 import android.os.Handler;
 
-import com.yang.iread.view.home.HomeActivity;
 import com.yang.iread.R;
 import com.yang.iread.base.BaseActivity;
-import com.yang.iread.view.user.LoginActivity;
+import com.yang.iread.base.BaseContract;
+import com.yang.iread.view.user.login.LoginActivity;
 
 /**
  * Description:
@@ -19,6 +19,11 @@ public class SplashActivity extends BaseActivity {
     @Override
     public int loadLayout() {
         return R.layout.activity_splash;
+    }
+
+    @Override
+    public BaseContract.Presenter getPresenter() {
+        return null;
     }
 
     @Override

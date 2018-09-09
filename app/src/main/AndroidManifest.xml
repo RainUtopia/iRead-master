@@ -27,7 +27,7 @@
             android:name=".view.home.HomeActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".view.user.LoginActivity"/>
+        <activity android:name=".view.user.login.LoginActivity"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.yang.iread.view.user;
+package com.yang.iread.view.user.login;
 
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,18 +15,21 @@ import butterknife.OnClick;
  * @createDate: 2018/9/6 12:46
  * @description:
  */
-public class LoginActivity extends BaseActivity implements LoginContract.View {
+public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View {
     @BindView(R.id.edt_login_user)
     EditText mEdtUserName;
 
     @BindView(R.id.edt_login_password)
     EditText mEdtPassword;
 
-    private LoginPresenter mPresener;
-
     @Override
     public int loadLayout() {
         return R.layout.activity_login;
+    }
+
+    @Override
+    public LoginPresenter getPresenter() {
+        return new LoginPresenter();
     }
 
     @Override
@@ -36,21 +39,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @Override
     public void loadData() {
-        mPresener = new LoginPresenter();
-        mPresener.attachView(this);
     }
 
     @OnClick(R.id.btn_login)
     void login() {
         String name = mEdtUserName.getText().toString().trim();
         String password = mEdtPassword.getText().toString().trim();
-        mPresener.login(name,password);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresener.detachView();
+        mPresenter.login(name, password);
     }
 
     @Override
@@ -58,5 +53,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show();
 
         startActivity(HomeActivity.class);
+        finish();
     }
 }

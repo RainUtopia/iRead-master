@@ -1,4 +1,4 @@
-package com.yang.iread.view.user;
+package com.yang.iread.view.user.login;
 
 import com.yang.iread.base.BaseContract;
 

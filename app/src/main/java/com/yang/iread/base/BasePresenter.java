@@ -1,5 +1,7 @@
 package com.yang.iread.base;
 
+import android.util.Log;
+
 import java.net.UnknownHostException;
 
 /**
@@ -19,6 +21,7 @@ public abstract class BasePresenter<T extends BaseContract.View> implements Base
     @Override
     public void detachView() {
         mView = null;
+        Log.d("YJH","detachView");
     }
 
     public void handleThrowable(Throwable throwable) {
