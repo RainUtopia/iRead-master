@@ -34,7 +34,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void initView() {
-
+        setToolbarTitle(R.string.login);
     }
 
     @Override

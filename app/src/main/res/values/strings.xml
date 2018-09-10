@@ -3,4 +3,8 @@
     <string name="discovery">发现</string>
     <string name="sort">分类</string>
     <string name="mine">我</string>
+
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="close">关闭</string>
 </resources>

@@ -4,11 +4,19 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.socks.library.KLog;
@@ -17,6 +25,7 @@ import com.yang.iread.util.ClassUtil;
 import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.Z_TYPE;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -30,6 +39,15 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
     private ZLoadingDialog mLoadingDialog;
     private Toast mToast;
 
+    @BindView(R.id.tb_base)
+    Toolbar mToolbar;
+
+    //@BindView(R.id.fl_content)
+    FrameLayout mFlContent;
+
+    @BindView(R.id.tv_tb_title)
+    TextView mBaseTitleTv;
+
     @LayoutRes
     public abstract int loadLayout();
 
@@ -42,14 +60,25 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(loadLayout());
+        setContentView(R.layout.activity_base);
+
+       // mToolbar = findViewById(R.id.tb_base);
+        mFlContent = findViewById(R.id.fl_content);
+
+        if (loadLayout() != 0) {
+            View content  = getLayoutInflater().inflate(loadLayout(),null);
+            if (content != null) {
+                mFlContent.addView(content);
+            }
+        }
+        ButterKnife.bind(this);
         //instancePresenter();
         mPresenter = getPresenter();
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
-        ButterKnife.bind(this);
 
+        initToolobar();
         initView();
         loadData();
     }
@@ -66,7 +95,7 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
     }
 
     @Override
-    public void showLoadingDialog(String... label) {
+    public void showLoadingDialog(@Nullable String... label) {
         mLoadingDialog = new ZLoadingDialog(this);
         mLoadingDialog.setLoadingBuilder(Z_TYPE.CIRCLE_CLOCK)//设置类型
                 .setLoadingColor(Color.GRAY)//颜色
@@ -88,12 +117,16 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
     }
 
     public void setFullScreen() {
+        hideStatusBar();
+        hideToolbar();
         hideNavigationBar();
-        hideBackNavigation();
+        //hideBackNavigation();
     }
 
-    public void hideBackNavigation() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    public void hideStatusBar() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //View decorView = getWindow().getDecorView();
+        //decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     public void hideNavigationBar() {
@@ -102,16 +135,25 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    /*public void hideStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mStatusbar.setVisibility( View.GONE );
-        }
-    }
 
     public void hideToolbar() {
-        mBaseToolbar.setVisibility( View.GONE );
-        mToolbarBottomLine.setVisibility( View.GONE );
-    }*/
+        mToolbar.setVisibility( View.GONE );
+    }
+
+    public void showToolbar() {
+        mToolbar.setVisibility( View.VISIBLE );
+    }
+
+    //隐藏toolbar返回按钮
+    public void hideBackNavigation() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    //设置toolbar返回按钮图标
+    public void setBackNavigationDrawable(@DrawableRes int id) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(id);
+    }
 
     public void showToast(String text) {
         if (mToast == null) {
@@ -138,7 +180,6 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("YJH", "BaseActivity destroy");
         if (mPresenter != null) {
             mPresenter.detachView();
         }
@@ -146,5 +187,39 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends App
 
     private void instancePresenter() {
         mPresenter = ClassUtil.getNewClass(this, 0);
+    }
+
+    private void initToolobar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //setBackNavigationDrawable(R.drawable.ic_back);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    //自定义标题
+    public void setToolbarTitle(@StringRes int id) {
+        mBaseTitleTv.setText(id);
+    }
+
+    public void setToolbarTitle(String title) {
+        mBaseTitleTv.setText(title);
+    }
+
+    public void setToolbarTitleColor(@ColorRes int colorRes) {
+        mBaseTitleTv.setTextColor(ContextCompat.getColor(this,colorRes));
+    }
+
+    //默认标题
+    public void setDefaultTitle(String title) {
+        //设置颜色
+        mToolbar.setTitleTextColor(ContextCompat.getColor(this,R.color.white));
+        //设置标题
+        mToolbar.setTitle(title);
     }
 }

@@ -9,20 +9,16 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.allenliu.versionchecklib.v2.AllenVersionChecker;
-import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.yang.iread.R;
 import com.yang.iread.base.BaseActivity;
-import com.yang.iread.util.URLUtils;
-import com.yang.iread.view.fragment.DiscoveryFragment;
-import com.yang.iread.view.fragment.MineFragment;
-import com.yang.iread.view.fragment.SortFragment;
+import com.yang.iread.view.fragment.discovery.DiscoveryFragment;
+import com.yang.iread.view.fragment.mine.MineFragment;
+import com.yang.iread.view.fragment.sort.SortFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Description:
@@ -64,41 +60,27 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         showToast(data);
     }
 
-    @OnClick(R.id.btn_download)
-    void downLoad() {
-        AllenVersionChecker.getInstance()
-                .downloadOnly(
-                        UIData.create()
-                                .setDownloadUrl(URLUtils.WEIXIN_URL)
-                                .setContent("修复一些bug")
-                                .setTitle("发现新版本")
-                ).setShowNotification(true)
-                .setShowDownloadingDialog(false)
-                .excuteMission(this);
-
-    }
-
     private void initTabHost() {
         mTabs = new ArrayList<>();
-        mTabs.add( new Tab( R.drawable.tab_icon_selector_discovery, R.string.discovery, DiscoveryFragment.class ) );
-        mTabs.add( new Tab( R.drawable.tab_icon_selector_sort, R.string.sort, SortFragment.class ) );
-        mTabs.add( new Tab( R.drawable.tab_icon_selector_mine, R.string.mine, MineFragment.class ) );
+        mTabs.add(new Tab(R.drawable.tab_icon_selector_discovery, R.string.discovery, DiscoveryFragment.class));
+        mTabs.add(new Tab(R.drawable.tab_icon_selector_sort, R.string.sort, SortFragment.class));
+        mTabs.add(new Tab(R.drawable.tab_icon_selector_mine, R.string.mine, MineFragment.class));
 
-        mFragmentTabHost.setup( this, getSupportFragmentManager(), R.id.fl_container );
-        mFragmentTabHost.getTabWidget().setShowDividers( LinearLayout.SHOW_DIVIDER_NONE );
+        mFragmentTabHost.setup(this, getSupportFragmentManager(), R.id.fl_container);
+        mFragmentTabHost.getTabWidget().setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
 
         for (Tab tab : mTabs) {
-            View view = LayoutInflater.from( this ).inflate( R.layout.main_tab, null );
-            ((ImageView) view.findViewById( R.id.iv_icon )).setImageResource( tab.getIcon() );
-            ((TextView) view.findViewById( R.id.tv_title )).setText( getString( tab.getTitle() ) );
+            View view = LayoutInflater.from(this).inflate(R.layout.main_tab, null);
+            ((ImageView) view.findViewById(R.id.iv_icon)).setImageResource(tab.getIcon());
+            ((TextView) view.findViewById(R.id.tv_title)).setText(getString(tab.getTitle()));
 
-            TabHost.TabSpec tabSpec = mFragmentTabHost.newTabSpec( getString( tab.getTitle() ) );
-            tabSpec.setIndicator( view );
+            TabHost.TabSpec tabSpec = mFragmentTabHost.newTabSpec(getString(tab.getTitle()));
+            tabSpec.setIndicator(view);
 
-            mFragmentTabHost.addTab( tabSpec, tab.getFragment(), null );
+            mFragmentTabHost.addTab(tabSpec, tab.getFragment(), null);
         }
 
-        mFragmentTabHost.setCurrentTab( 0 );
+        mFragmentTabHost.setCurrentTab(0);
 
         /*mFragmentTabHost.getTabWidget().getChildAt( 1 ).setOnClickListener( new View.OnClickListener() {
             @Override

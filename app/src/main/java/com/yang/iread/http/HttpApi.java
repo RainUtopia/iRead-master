@@ -1,10 +1,10 @@
 package com.yang.iread.http;
 
+import com.yang.iread.result.Images;
 import com.yang.iread.result.Token;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -87,4 +87,7 @@ public interface HttpApi {
 
     @GET("login")
     Observable<Token> login(@Query("key")String key, @Query("phone")String phone, @Query("passwd")String passwd);
+
+    @GET("meituApi")
+    Observable<Images> getImages(@Query("page")int page);
 }
